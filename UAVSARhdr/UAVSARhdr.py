@@ -51,9 +51,13 @@ def genHDRfromTXT(args):
                 print('Lines =', GRDLines)
                 headerPar['GRDLines'] = GRDLines
             elif 'grd_pwr.row_mult' in line:
-                GRDPixel = abs(float(line.split()[3].split(';')[0]))
-                print('PIXEL SIZE = ', GRDPixel)
-                headerPar['GRDPixel'] = GRDPixel
+                pixelY = abs(float(line.split()[3].split(';')[0]))
+                print('PIXEL Y SPACING = ', pixelY)
+                headerPar['pixelY'] = pixelY
+            elif 'grd_pwr.col_mult' in line:
+                pixelX = abs(float(line.split()[3].split(';')[0]))
+                print('PIXEL X SPACING = ', pixelX)
+                headerPar['pixelX'] = pixelX
     
     # ASSIGN NUMER OF LINES AND SAMPLES BASED UPON FILE TYPE
     #print('Reading lines...')
@@ -91,7 +95,7 @@ data type = {dataType}
 interleave = bsq
 sensor type = Unknown
 byte order = 0
-map info = {{Geographic Lat/Lon, 1.5, 1.5, {ULlongCord}, {ULlatCord}, {GRDPixel}, {GRDPixel}, WGS-84, units=Degrees}}
+map info = {{Geographic Lat/Lon, 1.5, 1.5, {ULlongCord}, {ULlatCord}, {pixelX}, {pixelY}, WGS-84, units=Degrees}}
 coordinate system string = {{GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]}}
 wavelength units = Unknown'''.format(**headerPar)
         enviHDRFile.write(enviHDR)
