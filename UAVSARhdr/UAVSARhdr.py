@@ -25,7 +25,7 @@ def genHDRfromTXT(args):
 
     file = args.input
     fileBaseName = os.path.split(file)[-1]
-    fileBaseName = fileBaseName.replace('.txt','')
+    fileBaseName = fileBaseName.replace('.ann','')
     headerPar['fileBaseName']=fileBaseName
     hdrFile = open(file, 'r')
     for line in hdrFile:
@@ -80,7 +80,7 @@ def genHDRfromTXT(args):
         print('DATATYPE = ', dataType)
         headerPar['dataType'] = dataType
 
-    if args.input.endswith('.txt'):
+    if args.input.endswith('.ann'):
         file = args.uavsar + '.hdr'
         print('Writing output HDR file...')
         enviHDRFile = open(file, 'w')
@@ -112,13 +112,13 @@ def main():
     parser.add_argument("-p", "--polarization", type=str, help="Specify the input UAVSAR polarization in UPPERCASE (i.e HHHV)")
     args = parser.parse_args()
 
-    if '.txt' in str(args.input):
+    if '.ann' in str(args.input):
         pass
     else:
-        print("INPUT UAVSAR ANN FILE MUST BE '.TXT'")
+        print("INPUT UAVSAR ANN FILE MUST BE '.ANN'")
         os._exit(1)
     if args.input == None:
-        print("SPECIFY IINPUT TXT FILE")
+        print("SPECIFY INPUT ANN FILE")
         os._exit(1)
     elif args.uavsar == None:
         print("SPECIFY INPUT UAVSAR FILE")
