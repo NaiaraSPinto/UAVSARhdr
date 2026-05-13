@@ -25,7 +25,7 @@ def genHDRfromTXT(args):
 
     file = args.input
     fileBaseName = os.path.split(file)[-1]
-    fileBaseName = fileBaseName.replace('.txt','')
+    fileBaseName = fileBaseName.replace('.ann','')
     headerPar['fileBaseName']=fileBaseName
     hdrFile = open(file, 'r')
     for line in hdrFile:
@@ -51,9 +51,13 @@ def genHDRfromTXT(args):
                 print('Lines =', GRDLines)
                 headerPar['GRDLines'] = GRDLines
             elif 'grd_pwr.row_mult' in line:
-                GRDPixel = abs(float(line.split()[3].split(';')[0]))
-                print('PIXEL SIZE = ', GRDPixel)
-                headerPar['GRDPixel'] = GRDPixel
+                pixelY = abs(float(line.split()[3].split(';')[0]))
+                print('PIXEL Y SPACING = ', pixelY)
+                headerPar['pixelY'] = pixelY
+            elif 'grd_pwr.col_mult' in line:
+                pixelX = abs(float(line.split()[3].split(';')[0]))
+                print('PIXEL X SPACING = ', pixelX)
+                headerPar['pixelX'] = pixelX
     
     # ASSIGN NUMER OF LINES AND SAMPLES BASED UPON FILE TYPE
     #print('Reading lines...')
@@ -76,7 +80,7 @@ def genHDRfromTXT(args):
         print('DATATYPE = ', dataType)
         headerPar['dataType'] = dataType
 
-    if args.input.endswith('.txt'):
+    if args.input.endswith('.ann'):
         file = args.uavsar + '.hdr'
         print('Writing output HDR file...')
         enviHDRFile = open(file, 'w')
@@ -91,7 +95,7 @@ data type = {dataType}
 interleave = bsq
 sensor type = Unknown
 byte order = 0
-map info = {{Geographic Lat/Lon, 1.5, 1.5, {ULlongCord}, {ULlatCord}, {GRDPixel}, {GRDPixel}, WGS-84, units=Degrees}}
+map info = {{Geographic Lat/Lon, 1.5, 1.5, {ULlongCord}, {ULlatCord}, {pixelX}, {pixelY}, WGS-84, units=Degrees}}
 coordinate system string = {{GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]}}
 wavelength units = Unknown'''.format(**headerPar)
         enviHDRFile.write(enviHDR)
@@ -108,13 +112,13 @@ def main():
     parser.add_argument("-p", "--polarization", type=str, help="Specify the input UAVSAR polarization in UPPERCASE (i.e HHHV)")
     args = parser.parse_args()
 
-    if '.txt' in str(args.input):
+    if '.ann' in str(args.input):
         pass
     else:
-        print("INPUT UAVSAR ANN FILE MUST BE '.TXT'")
+        print("INPUT UAVSAR ANN FILE MUST BE '.ANN'")
         os._exit(1)
     if args.input == None:
-        print("SPECIFY IINPUT TXT FILE")
+        print("SPECIFY INPUT ANN FILE")
         os._exit(1)
     elif args.uavsar == None:
         print("SPECIFY INPUT UAVSAR FILE")
